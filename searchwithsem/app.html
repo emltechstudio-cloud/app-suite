@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search with SEM</title>
+    <meta name="description" content="Fast Wikipedia search with summaries, images, trending topics, and related articles.">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4285f4">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Searching Wikipedia...</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            <div class="logo" id="headerLogo">
+                <span class="c1">S</span><span class="c2">e</span><span class="c3">a</span><span class="c4">r</span><span class="c5">c</span><span class="c6">h</span>
+            </div>
+            <div class="header-status">
+                <span class="online-indicator" id="onlineIndicator" title="Online">●</span>
+                <div class="auto-save-indicator" id="autoSaveIndicator">
+                    <span class="toggle-text">OFF</span>
+                    <div class="toggle-switch"></div>
+                </div>
+            </div>
+        </div>
+        <div class="search-wrap">
+            <input type="text" class="search-box" id="searchInput" placeholder="Search Wikipedia..." autocomplete="off" spellcheck="false">
+            <div class="search-actions">
+                <button class="icon-btn" id="voiceBtn" title="Voice search">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="icon-btn" id="searchBtn" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main>
+        <!-- Home View -->
+        <div id="homeScreen" class="home">
+            <div class="home-logo" id="homeLogo">
+                <span class="c1">S</span><span class="c2">e</span><span class="c3">a</span><span class="c4">r</span><span class="c5">c</span><span class="c6">h</span>
+            </div>
+            <div class="home-sub">with SEM</div>
+            <div class="home-tagline">Search once. Read later.</div>
+
+            <!-- Stats Section -->
+            <div class="stats-section"></div>
+
+            <!-- Your Library Section -->
+            <div class="library-section">
+                <div class="section-label">
+                    <i class="fas fa-book"></i> Your Library
+                </div>
+                <div class="library-grid" id="libraryGrid"></div>
+            </div>
+
+            <!-- Trending Section -->
+            <div class="trending-section">
+                <div class="section-label">
+                    <i class="fas fa-fire-alt" style="color: var(--error);"></i> Trending Today
+                </div>
+                <div class="trending-chips" id="trendingChips">
+                    <span class="chip-loading">Loading trending topics...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic View -->
+        <div id="topicScreen" class="topic-screen">
+            <img class="topic-cover" id="topicCover" src="" alt="" style="display: none;">
+            
+            <h1 class="topic-title" id="topicTitle"></h1>
+            <div class="topic-subtitle" id="topicSubtitle"></div>
+
+            <!-- Quick Fact -->
+            <div class="quick-fact" id="quickFact">
+                <div class="quick-fact-header">
+                    <span class="quick-fact-label"><i class="fas fa-bolt"></i> Quick Fact</span>
+                    <button class="quick-fact-toggle" id="quickFactToggle">Hide Quick Fact</button>
+                </div>
+                <div class="quick-fact-content" id="quickFactContent"></div>
+            </div>
+
+            <!-- Wikipedia Summary -->
+            <div class="wiki-summary" id="wikiSummary"></div>
+
+            <!-- Images Strip -->
+            <div class="images-strip-container">
+                <div class="images-strip" id="imagesStrip"></div>
+            </div>
+
+            <!-- Related Topics -->
+            <div class="related-section">
+                <div class="section-label"><i class="fas fa-link"></i> Related Topics</div>
+                <div class="related-pills" id="relatedChips"></div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn btn-primary" id="readFullBtn">
+                    <i class="fab fa-wikipedia-w"></i> Read Full Article
+                </button>
+                <button class="btn" id="saveBtn">Save</button>
+                <button class="btn" id="shareBtn">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+
+            <!-- User Note -->
+            <div class="user-note-section">
+                <label class="user-note-label">
+                    <i class="fas fa-sticky-note"></i> My Note
+                </label>
+                <textarea class="user-note" id="userNote" placeholder="Add your personal notes here..."></textarea>
+            </div>
+        </div>
+
+        <!-- Reader View -->
+        <div id="readerScreen" class="reader-screen">
+            <div class="reader-header">
+                <div class="reader-heading">
+                    <span class="reader-eyebrow"><i class="fas fa-book-open"></i> Reading mode</span>
+                    <div class="reader-title" id="readerTitle"></div>
+                </div>
+                <div class="reader-actions">
+                    <button class="reader-action" id="readerSaveBtn" title="Save article"><i class="far fa-bookmark"></i><span>Save</span></button>
+                    <button class="reader-action" id="readerShareBtn" title="Share article"><i class="fas fa-share-alt"></i><span>Share</span></button>
+                    <button class="reader-close" id="readerClose" title="Close"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="reader-content" id="readerContent"></div>
+        </div>
+
+        <!-- Library View -->
+        <div id="libraryScreen" class="library-screen">
+            <div class="library-header">
+                <h2>Your Library</h2>
+                <div class="library-search-wrap">
+                    <input type="text" class="library-search" id="librarySearch" placeholder="Search your topics...">
+                    <button class="library-search-clear" id="librarySearchClear" title="Clear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="library-tags" id="libraryTags"></div>
+            </div>
+            <div class="library-results" id="libraryResults"></div>
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lb-close" id="lbClose"><i class="fas fa-times"></i></button>
+        <button class="lb-nav lb-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="lb-nav lb-next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="lb-img-wrap">
+            <img class="lb-img" id="lbImg" src="" alt="">
+        </div>
+        <div class="lb-bottom">
+            <div class="lb-caption" id="lbCaption"></div>
+            <div class="lb-counter" id="lbCounter"></div>
+        </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="history-panel" id="historyPanel">
+        <div class="history-head">
+            <h3><i class="fas fa-history"></i> Search History</h3>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <button class="txt-btn" id="clearHistoryBtn">Clear All</button>
+                <button class="txt-btn" id="closeHistoryBtn"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="panel-intro">
+            <p>Pick up where you left off.</p>
+            <input class="panel-search" id="historySearch" type="search" placeholder="Search your history...">
+        </div>
+        <div class="history-body" id="historyList"></div>
+    </div>
+
+    <!-- Achievements Panel -->
+    <div class="achievements-panel" id="achievementsPanel">
+        <div class="achievements-head">
+            <h3><i class="fas fa-trophy"></i> Achievements</h3>
+            <button class="txt-btn" id="closeAchievementsBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="achievements-body" id="achievementsList"></div>
+    </div>
+
+    <!-- First Run Modal - Simple Centered -->
+    <div class="first-run-modal" id="firstRunModal">
+        <div class="first-run-title">Auto-Save?</div>
+        <div class="first-run-text">
+            Save every search for offline reading?
+            <div class="privacy-note">We count visits. Not what you search.</div>
+        </div>
+        <div class="first-run-actions">
+            <button class="first-run-btn yes" id="firstRunYes">Yes</button>
+            <button class="first-run-btn no" id="firstRunNo">No</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <button class="footer-btn active" id="homeBtn"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="footer-btn" id="libraryBtn"><i class="fas fa-book"></i><span>Library</span></button>
+        <button class="footer-btn" id="historyBtn"><i class="fas fa-history"></i><span>History</span></button>
+        <button class="footer-btn" id="achievementsBtn"><i class="fas fa-trophy"></i><span>Achievements</span></button>
+        <button class="footer-btn" id="themeBtn"><i class="fas fa-moon" id="themeIcon"></i><span>Theme</span></button>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/app-bundle.js"></script>
+</body>
+</html>

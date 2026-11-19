@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="Audiolite"/>
+<link rel="manifest" href="manifest.json"/>
+<title>Audiolite</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0a0a;--s1:#141414;--s2:#1c1c1c;
+  --bd:#242424;--bd2:#303030;
+  --g:#22c55e;--g2:#4ade80;--gd:rgba(34,197,94,0.12);
+  --tx:#f2f2ef;--t2:#888;--t3:#444;
+  --red:#ef4444;
+  --fn:'Syne',sans-serif;--mn:'JetBrains Mono',monospace;
+  --r:14px;--r2:8px;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+html{font-size:16px;-webkit-tap-highlight-color:transparent;height:100%;}
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);min-height:100vh;min-height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;}
+
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:transform 0.4s cubic-bezier(.4,0,.2,1),opacity 0.4s ease;will-change:transform;}
+.screen.hidden-left{transform:translateX(-100%);opacity:0;pointer-events:none;}
+.screen.hidden-right{transform:translateX(100%);opacity:0;pointer-events:none;}
+.screen.active{transform:translateX(0);opacity:1;}
+
+/* TOPBAR */
+.topbar{
+  padding:calc(var(--safe-t) + 1rem) 1.25rem 1rem;
+  display:flex;align-items:center;gap:1rem;
+  flex-shrink:0;
+}
+.back-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--s1);border:1px solid var(--bd);
+  color:var(--t2);display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.back-btn:hover{border-color:var(--bd2);color:var(--tx);}
+.topbar-logo{
+  display:flex;align-items:center;gap:.6rem;
+}
+.logo-mark{
+  width:28px;height:28px;flex-shrink:0;
+}
+.logo-name{font-size:1rem;font-weight:800;letter-spacing:-.01em;}
+.logo-name span{color:var(--g);}
+.topbar-title{font-size:.9rem;font-weight:700;flex:1;}
+.step-indicator{
+  font-family:var(--mn);font-size:.6rem;color:var(--t3);
+  letter-spacing:.12em;text-transform:uppercase;
+  margin-left:auto;
+}
+
+/* ============ SCREEN 1 — UPLOAD ============ */
+#s1{background:var(--bg);}
+.s1-inner{
+  flex:1;display:flex;flex-direction:column;
+  padding:1.5rem 1.25rem calc(var(--safe-b) + 2rem);
+  gap:2rem;
+}
+.s1-hero{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:1.5rem;text-align:center;
+}
+.s1-title{font-size:clamp(1.8rem,6vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;}
+.s1-title span{color:var(--g);}
+.s1-sub{font-family:var(--mn);font-size:.72rem;color:var(--t3);letter-spacing:.06em;line-height:1.8;}
+
+.upload-zone{
+  width:100%;
+  border:1.5px dashed var(--bd2);
+  border-radius:var(--r);
+  padding:2.5rem 1.5rem;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+  background:var(--s1);
+  position:relative;overflow:hidden;
+}
+.upload-zone::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 100%,var(--gd) 0%,transparent 70%);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+.upload-zone:hover::before,.upload-zone.over::before{opacity:1;}
+.upload-zone:hover,.upload-zone.over{border-color:var(--g);border-style:solid;}
+.uz-icon{margin:0 auto .75rem;color:var(--t3);}
+.uz-title{font-size:1rem;font-weight:700;margin-bottom:.35rem;}
+.uz-sub{font-family:var(--mn);font-size:.65rem;color:var(--t3);line-height:1.7;}
+.uz-sub strong{color:var(--g);}
+
+.recent-projects{display:flex;flex-direction:column;gap:.6rem;}
+.rp-label{font-family:var(--mn);font-size:.6rem;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem;}
+.rp-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);
+  padding:.8rem 1rem;display:flex;align-items:center;gap:.85rem;
+  cursor:pointer;transition:all .15s;
+}
+.rp-card:hover{border-color:var(--bd2);background:var(--s2);}
+.rp-icon{width:32px;height:32px;border-radius:6px;background:var(--gd);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--g);}
+.rp-info{flex:1;min-width:0;}
+.rp-name{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rp-meta{font-family:var(--mn);font-size:.58rem;color:var(--t3);margin-top:.15rem;}
+.rp-preset{font-family:var(--mn);font-size:.58rem;background:var(--gd);color:var(--g);padding:.15rem .45rem;border-radius:3px;flex-shrink:0;}
+
+/* ============ LOADING SCREEN ============ */
+#s-loading{background:var(--bg);align-items:center;justify-content:center;}
+.loading-inner{display:flex;flex-direction:column;align-items:center;gap:2rem;text-align:center;padding:2rem;}
+.wave-anim{display:flex;align-items:center;gap:5px;height:60px;}
+.wave-anim span{
+  width:5px;border-radius:3px;background:var(--g);
+  animation:wavebar 1.2s ease-in-out infinite;
+}
+.wave-anim span:nth-child(1){height:20px;animation-delay:0s;}
+.wave-anim span:nth-child(2){height:35px;animation-delay:.1s;}
+.wave-anim span:nth-child(3){height:50px;animation-delay:.2s;}
+.wave-anim span:nth-child(4){height:60px;animation-delay:.3s;}
+.wave-anim span:nth-child(5){height:50px;animation-delay:.4s;}
+.wave-anim span:nth-child(6){height:35px;animation-delay:.5s;}
+.wave-anim span:nth-child(7){height:20px;animation-delay:.6s;}
+@keyframes wavebar{0%,100%{transform:scaleY(.4);opacity:.4;}50%{transform:scaleY(1);opacity:1;}}
+.loading-title{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;}
+.loading-sub{font-family:var(--mn);font-size:.68rem;color:var(--t3);letter-spacing:.08em;}
+.loading-progress{width:200px;height:3px;background:var(--bd);border-radius:2px;overflow:hidden;}
+.loading-bar{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:2px;width:0%;transition:width .3s ease;}
+
+/* ============ SCREEN 2 — PRESETS ============ */
+#s2{background:var(--bg);}
+.s2-inner{flex:1;display:flex;flex-direction:column;padding:0 1.25rem calc(var(--safe-b) + 1.5rem);gap:1.25rem;overflow-y:auto;}
+.file-pill{
+  display:flex;align-items:center;gap:.75rem;
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:50px;padding:.5rem 1rem .5rem .6rem;
+  align-self:flex-start;
+}
+.file-pill-icon{width:28px;height:28px;border-radius:50%;background:var(--gd);display:flex;align-items:center;justify-content:center;color:var(--g);flex-shrink:0;}
+.file-pill-name{font-family:var(--mn);font-size:.68rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+
+.s2-heading{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;}
+.s2-sub{font-family:var(--mn);font-size:.65rem;color:var(--t3);margin-top:.3rem;}
+
+.presets-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;}
+.preset-tile{
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:var(--r);padding:1.1rem 1rem;
+  cursor:pointer;transition:all .2s;
+  display:flex;flex-direction:column;gap:.5rem;
+  position:relative;overflow:hidden;
+}
+.preset-tile::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 100%,var(--gd) 0%,transparent 70%);opacity:0;transition:opacity .3s;}
+.preset-tile:hover::before{opacity:1;}
+.preset-tile:hover{border-color:var(--g);transform:translateY(-1px);}
+.preset-tile:active{transform:scale(.97);}
+.pt-icon{width:32px;height:32px;color:var(--t2);}
+.pt-name{font-size:.82rem;font-weight:700;}
+.pt-desc{font-family:var(--mn);font-size:.58rem;color:var(--t3);line-height:1.5;}
+
+/* ============ SCREEN 3 — RESULT ============ */
+#s3{background:var(--bg);}
+.s3-inner{flex:1;display:flex;flex-direction:column;padding:0 1.25rem calc(var(--safe-b) + 1.5rem);gap:1.5rem;overflow-y:auto;}
+
+.preset-applied-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--gd);border:1px solid rgba(34,197,94,.2);
+  border-radius:50px;padding:.4rem .9rem;align-self:flex-start;
+  font-family:var(--mn);font-size:.65rem;color:var(--g);
+}
+.pab-dot{width:6px;height:6px;border-radius:50%;background:var(--g);}
+
+.audio-player{
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:var(--r);padding:1.5rem;
+  display:flex;flex-direction:column;gap:1.25rem;
+}
+.waveform-wrap{position:relative;}
+canvas#wv{width:100%;height:80px;border-radius:var(--r2);background:var(--bg);display:block;cursor:pointer;}
+.wv-progress{position:absolute;top:0;left:0;height:100%;background:rgba(34,197,94,.08);border-radius:var(--r2);pointer-events:none;width:0%;transition:width .1s linear;}
+.player-controls{display:flex;align-items:center;gap:1rem;}
+.play-btn{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--g);border:none;color:#000;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.play-btn:hover{background:var(--g2);transform:scale(1.08);}
+.player-time{font-family:var(--mn);font-size:.7rem;color:var(--t2);}
+audio{display:none;}
+
+.result-meta{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
+  padding:1rem 1.1rem;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;
+}
+.rm-item{display:flex;flex-direction:column;gap:.2rem;}
+.rm-val{font-size:.85rem;font-weight:700;color:var(--g);}
+.rm-label{font-family:var(--mn);font-size:.58rem;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;}
+
+.s3-actions{display:flex;flex-direction:column;gap:.65rem;}
+.btn-download{
+  width:100%;padding:1rem;
+  background:var(--g);color:#000;border:none;
+  font-family:var(--fn);font-size:1rem;font-weight:800;
+  border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  transition:all .15s;text-decoration:none;
+}
+.btn-download:hover{background:var(--g2);transform:translateY(-1px);box-shadow:0 8px 28px rgba(34,197,94,.25);}
+.btn-back-preset{
+  width:100%;padding:.85rem;
+  background:transparent;color:var(--t2);
+  border:1px solid var(--bd2);
+  font-family:var(--fn);font-size:.85rem;font-weight:600;
+  border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  transition:all .15s;
+}
+.btn-back-preset:hover{border-color:var(--bd2);color:var(--tx);background:var(--s1);}
+
+/* BOTTOM SAFE AREA SPACER */
+.safe-bottom{height:var(--safe-b);}
+
+/* INPUT HIDDEN */
+#file-input{display:none;}
+</style>
+</head>
+<body>
+
+<!-- ======== SCREEN 1: UPLOAD ======== -->
+<div class="screen active" id="s1">
+  <div class="topbar">
+    <div class="topbar-logo">
+      <svg class="logo-mark" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="#111"/>
+        <rect x="4" y="16" width="3" height="8" rx="1.5" fill="#22c55e" opacity=".4"/>
+        <rect x="8.5" y="11" width="3" height="13" rx="1.5" fill="#22c55e" opacity=".6"/>
+        <rect x="13" y="7" width="3" height="17" rx="1.5" fill="#22c55e"/>
+        <rect x="17.5" y="10" width="3" height="14" rx="1.5" fill="#22c55e" opacity=".6"/>
+        <rect x="22" y="15" width="3" height="9" rx="1.5" fill="#22c55e" opacity=".4"/>
+      </svg>
+      <div class="logo-name">Audio<span>lite</span></div>
+    </div>
+    <div class="step-indicator">Step 1 of 3</div>
+  </div>
+
+  <div class="s1-inner">
+    <div class="s1-hero">
+      <div class="s1-title">Drop your video.<br/>Get <span>studio audio.</span></div>
+      <div class="s1-sub">MP4 &middot; MOV &middot; AVI &middot; WebM &middot; MP3 &middot; WAV &middot; AAC &middot; M4A<br/>Everything runs on your device. Nothing uploaded.</div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div class="uz-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+          </svg>
+        </div>
+        <div class="uz-title">Tap to upload</div>
+        <div class="uz-sub"><strong>Browse files</strong> or drag &amp; drop here</div>
+      </div>
+      <input type="file" id="file-input" accept="video/*,audio/*"/>
+    </div>
+
+    <div class="recent-projects" id="recent-section" style="display:none;">
+      <div class="rp-label">Recent Projects</div>
+      <div id="recent-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== LOADING SCREEN ======== -->
+<div class="screen hidden-right" id="s-loading">
+  <div class="loading-inner">
+    <div class="wave-anim">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div>
+      <div class="loading-title">Extracting Audio</div>
+      <div class="loading-sub" id="loading-sub">Reading your file...</div>
+    </div>
+    <div class="loading-progress">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SCREEN 2: PRESETS ======== -->
+<div class="screen hidden-right" id="s2">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('s1')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="topbar-title">Choose a Preset</div>
+    <div class="step-indicator">Step 2 of 3</div>
+  </div>
+
+  <div class="s2-inner">
+    <div class="file-pill" id="file-pill">
+      <div class="file-pill-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <span class="file-pill-name" id="file-pill-name">filename.mp4</span>
+    </div>
+
+    <div>
+      <div class="s2-heading">What's this audio for?</div>
+      <div class="s2-sub">Pick the one that fits. We'll handle the rest.</div>
+    </div>
+
+    <div class="presets-grid" id="presets-grid"></div>
+  </div>
+</div>
+
+<!-- ======== SCREEN 3: RESULT ======== -->
+<div class="screen hidden-right" id="s3">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('s2')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="topbar-title">Your Audio</div>
+    <div class="step-indicator">Step 3 of 3</div>
+  </div>
+
+  <div class="s3-inner">
+    <div class="preset-applied-badge" id="pab">
+      <div class="pab-dot"></div>
+      <span id="pab-name">Podcast applied</span>
+    </div>
+
+    <div class="audio-player">
+      <div class="waveform-wrap">
+        <canvas id="wv"></canvas>
+        <div class="wv-progress" id="wv-prog"></div>
+      </div>
+      <div class="player-controls">
+        <button class="play-btn" id="play-btn" onclick="togglePlay()">
+          <svg id="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <span class="player-time" id="player-time">0:00 / 0:00</span>
+      </div>
+      <audio id="au"></audio>
+    </div>
+
+    <div class="result-meta" id="result-meta">
+      <div class="rm-item"><div class="rm-val" id="rm-dur">0:00</div><div class="rm-label">Duration</div></div>
+      <div class="rm-item"><div class="rm-val" id="rm-size">0 MB</div><div class="rm-label">File Size</div></div>
+      <div class="rm-item"><div class="rm-val" id="rm-hz">44.1kHz</div><div class="rm-label">Sample Rate</div></div>
+    </div>
+
+    <div class="s3-actions">
+      <a class="btn-download" id="dl-link" download="audiolite.wav">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Audio
+      </a>
+      <button class="btn-back-preset" onclick="goTo('s2')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Try a different preset
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+// ── PRESETS ──────────────────────────────────────────────
+const PRESETS = [
+  {
+    id:'podcast', name:'Podcast', desc:'Clear voice, studio loud',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
+    gain:4, comp:85, bass:2, treb:5, gate:40, nr:true, ve:true
+  },
+  {
+    id:'interview', name:'Interview', desc:'Two voices, crisp & balanced',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    gain:3, comp:70, bass:0, treb:4, gate:35, nr:true, ve:true
+  },
+  {
+    id:'social', name:'Social Media', desc:'Punchy, loud, cuts through',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>',
+    gain:5.5, comp:92, bass:3, treb:5, gate:25, nr:true, ve:false
+  },
+  {
+    id:'music', name:'Music', desc:'Full spectrum, warm & wide',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    gain:2.5, comp:45, bass:5, treb:2, gate:0, nr:false, ve:false
+  },
+  {
+    id:'outdoor', name:'Outdoor / Field', desc:'Remove wind & background',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l4-8 4 5 3-3 4 6"/><circle cx="18" cy="6" r="2"/></svg>',
+    gain:3, comp:65, bass:-3, treb:3, gate:70, nr:true, ve:false
+  },
+  {
+    id:'speech', name:'Speech', desc:'Presentations & voice notes',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    gain:3.5, comp:75, bass:1, treb:4, gate:45, nr:true, ve:true
+  },
+  {
+    id:'cinema', name:'Cinema', desc:'Cinematic depth & presence',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
+    gain:2, comp:50, bass:6, treb:3, gate:10, nr:false, ve:false
+  },
+  {
+    id:'party', name:'Event / Party', desc:'High energy, max loudness',
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
+    gain:7, comp:80, bass:8, treb:4, gate:0, nr:false, ve:false
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────
+let currentFile = null;
+let rawBuffer = null;
+let outputBlob = null;
+let ACX = null;
+let isPlaying = false;
+let currentPreset = null;
+let currentProjectId = null;
+
+// ── INDEXEDDB ─────────────────────────────────────────────
+let DB;
+async function openDB(){
+  return new Promise((res,rej)=>{
+    const r = indexedDB.open('audiolite_v2', 1);
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      if(!d.objectStoreNames.contains('projects'))
+        d.createObjectStore('projects',{keyPath:'id'});
+    };
+    r.onsuccess = e => { DB = e.target.result; res(); };
+    r.onerror = () => rej(r.error);
+  });
+}
+const dbtx = (mode, fn) => new Promise((res,rej) => {
+  const t = DB.transaction('projects', mode);
+  const s = t.objectStore('projects');
+  const r = fn(s);
+  r.onsuccess = () => res(r.result);
+  r.onerror = () => rej(r.error);
+});
+const dbPut = v => dbtx('readwrite', s => s.put(v));
+const dbGetAll = () => dbtx('readonly', s => s.getAll());
+const dbGet = id => dbtx('readonly', s => s.get(id));
+
+// ── BUILD PRESETS GRID ────────────────────────────────────
+function buildPresets(){
+  const grid = document.getElementById('presets-grid');
+  grid.innerHTML = PRESETS.map(p => `
+    <div class="preset-tile" onclick="selectPreset('${p.id}')">
+      <div class="pt-icon">${p.icon}</div>
+      <div class="pt-name">${p.name}</div>
+      <div class="pt-desc">${p.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ── NAVIGATION ────────────────────────────────────────────
+let currentScreen = 's1';
+function goTo(id){
+  const screens = ['s1','s-loading','s2','s3'];
+  const order = screens.indexOf(id);
+  const current = screens.indexOf(currentScreen);
+  document.getElementById(currentScreen).className = 'screen ' + (order > current ? 'hidden-left' : 'hidden-right');
+  document.getElementById(id).className = 'screen active';
+  currentScreen = id;
+}
+
+// ── FILE HANDLING ─────────────────────────────────────────
+const uploadZone = document.getElementById('upload-zone');
+const fileInput = document.getElementById('file-input');
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('over'));
+uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('over'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if(e.target.files[0]) handleFile(e.target.files[0]); });
+
+async function handleFile(file){
+  if(!file.type.startsWith('video/') && !file.type.startsWith('audio/')){
+    alert('Please upload a video or audio file.'); return;
+  }
+  currentFile = file;
+  currentProjectId = Date.now().toString();
+  outputBlob = null;
+  rawBuffer = null;
+
+  // Show file name in pill
+  document.getElementById('file-pill-name').textContent = file.name;
+
+  // Go to loading
+  goTo('s-loading');
+  await decodeFile(file);
+}
+
+async function decodeFile(file){
+  try {
+    setLoadingProgress(10, 'Reading file...');
+    if(!ACX) ACX = new (window.AudioContext || window.webkitAudioContext)();
+    if(ACX.state === 'suspended') await ACX.resume();
+
+    setLoadingProgress(40, 'Decoding audio...');
+    const ab = await file.arrayBuffer();
+    rawBuffer = await ACX.decodeAudioData(ab);
+
+    setLoadingProgress(80, 'Almost there...');
+    await new Promise(r => setTimeout(r, 400));
+    setLoadingProgress(100, 'Done!');
+    await new Promise(r => setTimeout(r, 300));
+
+    // Auto-save project with original
+    await autoSaveProject(null, null);
+
+    goTo('s2');
+    loadRecent();
+  } catch(e){
+    console.error(e);
+    alert('Could not read this file. Please try another.');
+    goTo('s1');
+  }
+}
+
+function setLoadingProgress(pct, msg){
+  document.getElementById('loading-bar').style.width = pct + '%';
+  document.getElementById('loading-sub').textContent = msg;
+}
+
+// ── PRESET SELECTION ──────────────────────────────────────
+async function selectPreset(id){
+  currentPreset = PRESETS.find(p => p.id === id);
+  if(!currentPreset || !rawBuffer) return;
+
+  // Show loading between s2 and s3
+  document.getElementById('s2').className = 'screen hidden-left';
+  document.getElementById('s-loading').className = 'screen active';
+  currentScreen = 's-loading';
+  setLoadingProgress(0, 'Applying ' + currentPreset.name + '...');
+
+  try {
+    await processAudio(currentPreset);
+    await new Promise(r => setTimeout(r, 300));
+
+    // Update s3 UI
+    document.getElementById('pab-name').textContent = currentPreset.name + ' applied';
+    drawWaveform(rawBuffer);
+
+    const url = URL.createObjectURL(outputBlob);
+    document.getElementById('au').src = url;
+    document.getElementById('dl-link').href = url;
+    const name = (currentFile.name || 'audiolite').replace(/\.[^/.]+$/, '');
+    document.getElementById('dl-link').download = name + '_' + currentPreset.id + '.wav';
+
+    // Meta
+    document.getElementById('rm-dur').textContent = fmtTime(rawBuffer.duration);
+    document.getElementById('rm-size').textContent = fmtBytes(outputBlob.size);
+    document.getElementById('rm-hz').textContent = (rawBuffer.sampleRate/1000).toFixed(1) + 'kHz';
+
+    // Auto-save with preset
+    await autoSaveProject(currentPreset, url);
+
+    setLoadingProgress(100, 'Ready!');
+    await new Promise(r => setTimeout(r, 200));
+    goTo('s3');
+
+  } catch(e){
+    console.error(e);
+    goTo('s2');
+  }
+}
+
+// ── AUDIO PROCESSING ─────────────────────────────────────
+async function processAudio(preset){
+  const buf = rawBuffer;
+  const off = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+  const src = off.createBufferSource();
+  src.buffer = buf;
+
+  let prev = src;
+
+  // NOISE REDUCTION chain (podcast, interview, social, outdoor, speech)
+  if(preset.nr){
+    const hum = off.createBiquadFilter(); hum.type='notch'; hum.frequency.value=60; hum.Q.value=10;
+    prev.connect(hum);
+    const hp = off.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=80;
+    hum.connect(hp);
+    const lp = off.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=14000;
+    hp.connect(lp);
+    prev = { connect: n => lp.connect(n) };
+  }
+
+  // VOICE PRESENCE boost
+  const vb = off.createBiquadFilter(); vb.type='peaking'; vb.frequency.value=2800; vb.Q.value=1.0; vb.gain.value = preset.ve ? 4 : 0;
+  prev.connect(vb);
+
+  // NOISE GATE
+  const gt = off.createBiquadFilter(); gt.type='highpass'; gt.frequency.value = preset.gate > 0 ? (preset.gate/100)*160 : 10;
+  vb.connect(gt);
+
+  // BASS EQ
+  const bs = off.createBiquadFilter(); bs.type='lowshelf'; bs.frequency.value=200; bs.gain.value=preset.bass;
+  gt.connect(bs);
+
+  // TREBLE EQ
+  const tr = off.createBiquadFilter(); tr.type='highshelf'; tr.frequency.value=4000; tr.gain.value=preset.treb;
+  bs.connect(tr);
+
+  // COMPRESSOR
+  const cp = off.createDynamicsCompressor();
+  cp.threshold.value = -24 - (preset.comp/100)*12;
+  cp.knee.value = 10; cp.ratio.value = 1 + (preset.comp/100)*18;
+  cp.attack.value = 0.003; cp.release.value = 0.15;
+  tr.connect(cp);
+
+  // GAIN
+  const gn = off.createGain(); gn.gain.value = preset.gain;
+  cp.connect(gn);
+
+  // LIMITER
+  const lm = off.createDynamicsCompressor();
+  lm.threshold.value=-1; lm.knee.value=0; lm.ratio.value=20;
+  lm.attack.value=0.001; lm.release.value=0.05;
+  gn.connect(lm); lm.connect(off.destination);
+
+  src.start(0);
+
+  let pct = 10;
+  const tick = setInterval(() => { pct = Math.min(pct+8, 88); setLoadingProgress(pct, 'Processing...'); }, 150);
+  const rendered = await off.startRendering();
+  clearInterval(tick);
+  setLoadingProgress(95, 'Encoding...');
+
+  outputBlob = toWav(rendered);
+}
+
+// ── WAV ENCODER ───────────────────────────────────────────
+function toWav(buf){
+  const nc=buf.numberOfChannels, nf=buf.length, sr=buf.sampleRate, bps=16;
+  const br=sr*nc*bps/8, ba=nc*bps/8, ds=nf*ba;
+  const ab=new ArrayBuffer(44+ds), v=new DataView(ab);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF'); v.setUint32(4,36+ds,true); ws(8,'WAVE');
+  ws(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true);
+  v.setUint16(22,nc,true); v.setUint32(24,sr,true);
+  v.setUint32(28,br,true); v.setUint16(32,ba,true); v.setUint16(34,bps,true);
+  ws(36,'data'); v.setUint32(40,ds,true);
+  let o=44;
+  for(let i=0;i<nf;i++) for(let c=0;c<nc;c++){
+    let s=buf.getChannelData(c)[i]; s=Math.max(-1,Math.min(1,s));
+    v.setInt16(o, s<0?s*0x8000:s*0x7FFF, true); o+=2;
+  }
+  return new Blob([ab],{type:'audio/wav'});
+}
+
+// ── WAVEFORM ──────────────────────────────────────────────
+function drawWaveform(buf){
+  const cv=document.getElementById('wv'), ctx=cv.getContext('2d'), dpr=devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr; cv.height=cv.offsetHeight*dpr; ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth, H=cv.offsetHeight, d=buf.getChannelData(0), step=Math.ceil(d.length/W);
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<W;i++){
+    let mx=0;
+    for(let j=0;j<step;j++){ const val=Math.abs(d[i*step+j]||0); if(val>mx)mx=val; }
+    const bh=Math.max(2,mx*H*.85);
+    ctx.fillStyle=`rgba(34,197,94,${.2+mx*.8})`;
+    ctx.fillRect(i, H/2-bh/2, 1, bh);
+  }
+}
+
+// ── PLAYBACK ──────────────────────────────────────────────
+const audio = document.getElementById('au');
+audio.addEventListener('timeupdate', () => {
+  const pct = (audio.currentTime/(audio.duration||1))*100;
+  document.getElementById('wv-prog').style.width = pct+'%';
+  document.getElementById('player-time').textContent = fmtTime(audio.currentTime)+' / '+fmtTime(audio.duration||0);
+});
+audio.addEventListener('ended', () => {
+  isPlaying=false;
+  document.getElementById('play-icon').innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';
+  document.getElementById('wv-prog').style.width='0%';
+});
+function togglePlay(){
+  if(!outputBlob) return;
+  if(isPlaying){ audio.pause(); isPlaying=false; document.getElementById('play-icon').innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>'; }
+  else { audio.play(); isPlaying=true; document.getElementById('play-icon').innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
+}
+
+// ── AUTO-SAVE ─────────────────────────────────────────────
+async function autoSaveProject(preset, audioUrl){
+  if(!DB || !currentFile) return;
+  try {
+    const existing = await dbGet(currentProjectId).catch(()=>null);
+    let dataUrl = existing ? existing.outputDataUrl : null;
+    if(outputBlob && !audioUrl) {
+      // original save - no processed audio yet
+    } else if(outputBlob && audioUrl) {
+      // save processed version
+      dataUrl = await blobToDataUrl(outputBlob);
+    }
+    const proj = {
+      id: currentProjectId,
+      name: currentFile.name.replace(/\.[^/.]+$/,''),
+      fileName: currentFile.name,
+      fileSize: currentFile.size,
+      createdAt: existing ? existing.createdAt : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      preset: preset ? preset.id : null,
+      presetName: preset ? preset.name : null,
+      outputDataUrl: dataUrl,
+      duration: rawBuffer ? fmtTime(rawBuffer.duration) : null,
+    };
+    await dbPut(proj);
+  } catch(e){ console.error('autosave error', e); }
+}
+
+function blobToDataUrl(blob){
+  return new Promise(res => {
+    const r = new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(blob);
+  });
+}
+
+// ── RECENT PROJECTS ───────────────────────────────────────
+async function loadRecent(){
+  if(!DB) return;
+  const all = await dbGetAll();
+  const section = document.getElementById('recent-section');
+  if(!all.length){ section.style.display='none'; return; }
+  all.sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+  const recent = all.slice(0,3);
+  section.style.display='';
+  const pIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`;
+  document.getElementById('recent-list').innerHTML = recent.map(p=>`
+    <div class="rp-card" onclick="openProject('${p.id}')">
+      <div class="rp-icon">${pIcon}</div>
+      <div class="rp-info">
+        <div class="rp-name">${p.name}</div>
+        <div class="rp-meta">${p.fileName} &middot; ${new Date(p.updatedAt).toLocaleDateString()}</div>
+      </div>
+      ${p.presetName ? `<div class="rp-preset">${p.presetName}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+async function openProject(id){
+  const all = await dbGetAll();
+  const p = all.find(x=>x.id===id);
+  if(!p || !p.outputDataUrl) return;
+  currentProjectId = p.id;
+  // Load processed audio back
+  outputBlob = await fetch(p.outputDataUrl).then(r=>r.blob()).catch(()=>null);
+  if(!outputBlob) return;
+
+  document.getElementById('file-pill-name').textContent = p.fileName;
+  currentPreset = p.preset ? PRESETS.find(x=>x.id===p.preset) : PRESETS[0];
+  document.getElementById('pab-name').textContent = (p.presetName||'Audio') + ' applied';
+
+  const url = URL.createObjectURL(outputBlob);
+  document.getElementById('au').src = url;
+  document.getElementById('dl-link').href = url;
+  document.getElementById('dl-link').download = p.name + '.wav';
+  document.getElementById('rm-dur').textContent = p.duration || '—';
+  document.getElementById('rm-size').textContent = fmtBytes(outputBlob.size);
+  document.getElementById('rm-hz').textContent = '44.1kHz';
+
+  // Draw placeholder waveform from blob
+  try {
+    if(!ACX) ACX = new(window.AudioContext||window.webkitAudioContext)();
+    const ab = await outputBlob.arrayBuffer();
+    const buf = await ACX.decodeAudioData(ab);
+    drawWaveform(buf);
+  } catch(e){}
+
+  goTo('s3');
+}
+
+// ── UTILS ─────────────────────────────────────────────────
+function fmtTime(s){ if(!isFinite(s))return'0:00'; const m=Math.floor(s/60),sc=Math.floor(s%60); return m+':'+(sc<10?'0':'')+sc; }
+function fmtBytes(b){ if(b<1024)return b+' B'; if(b<1048576)return(b/1024).toFixed(1)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+
+// ── INIT ──────────────────────────────────────────────────
+(async function init(){
+  buildPresets();
+  await openDB();
+  await loadRecent();
+})();
+</script>
+</body>
+</html>

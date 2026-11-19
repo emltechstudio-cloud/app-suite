@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta name="description" content="Audiolite — Extract studio-quality audio from any video. Free, instant, private. By EML Tech Studio."/>
+<link rel="manifest" href="manifest.json"/>
+<title>Audiolite — Studio Audio Extractor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0a0a;--s1:#111;--s2:#161616;--bd:#222;--bd2:#2e2e2e;
+  --g:#22c55e;--g2:#4ade80;--gd:rgba(34,197,94,0.1);--gd2:rgba(34,197,94,0.05);
+  --tx:#f2f2ef;--t2:#888;--t3:#444;
+  --fn:'Syne',sans-serif;--mn:'JetBrains Mono',monospace;
+  --r:14px;--r2:8px;
+}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 2rem;
+  background:rgba(10,10,10,.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-logo{display:flex;align-items:center;gap:.6rem;}
+.nav-logo-svg{width:28px;height:28px;}
+.nav-logo-text{font-size:1rem;font-weight:800;letter-spacing:-.01em;}
+.nav-logo-text span{color:var(--g);}
+.nav-links{display:flex;align-items:center;gap:1.5rem;}
+.nav-link{font-family:var(--mn);font-size:.7rem;color:var(--t2);text-decoration:none;letter-spacing:.06em;transition:color .15s;}
+.nav-link:hover{color:var(--tx);}
+.nav-cta{
+  background:var(--g);color:#000;
+  font-family:var(--fn);font-size:.78rem;font-weight:700;
+  padding:.5rem 1.1rem;border-radius:50px;text-decoration:none;
+  transition:all .15s;
+}
+.nav-cta:hover{background:var(--g2);}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:6rem 1.5rem 4rem;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 20%, rgba(34,197,94,.08) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--gd);border:1px solid rgba(34,197,94,.2);
+  border-radius:50px;padding:.35rem .9rem;margin-bottom:1.5rem;
+  font-family:var(--mn);font-size:.65rem;color:var(--g);letter-spacing:.08em;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero-title{
+  font-size:clamp(2.8rem,8vw,5.5rem);font-weight:800;
+  letter-spacing:-.04em;line-height:1.0;margin-bottom:1.5rem;
+  max-width:800px;
+}
+.hero-title .green{color:var(--g);}
+.hero-title .dim{color:var(--t2);}
+.hero-sub{
+  font-family:var(--mn);font-size:clamp(.75rem,2vw,.9rem);
+  color:var(--t2);line-height:1.9;max-width:520px;margin-bottom:2.5rem;
+}
+.hero-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.btn-hero{
+  background:var(--g);color:#000;
+  font-family:var(--fn);font-size:1rem;font-weight:800;
+  padding:.9rem 2.2rem;border-radius:50px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.6rem;
+  transition:all .2s;
+  box-shadow:0 0 0 0 rgba(34,197,94,.4);
+}
+.btn-hero:hover{background:var(--g2);transform:translateY(-2px);box-shadow:0 0 0 8px rgba(34,197,94,.1);}
+.btn-ghost{
+  background:transparent;color:var(--t2);
+  font-family:var(--fn);font-size:.88rem;font-weight:600;
+  padding:.9rem 1.8rem;border-radius:50px;text-decoration:none;
+  border:1px solid var(--bd2);transition:all .15s;
+}
+.btn-ghost:hover{color:var(--tx);border-color:var(--bd2);background:var(--s1);}
+
+/* WAVE DECORATION */
+.hero-wave{
+  display:flex;align-items:center;gap:4px;margin-top:3rem;opacity:.25;
+}
+.hw-bar{
+  width:4px;border-radius:2px;background:var(--g);
+  animation:hwb 1.4s ease-in-out infinite;
+}
+.hw-bar:nth-child(1){height:16px;animation-delay:0s;}
+.hw-bar:nth-child(2){height:28px;animation-delay:.1s;}
+.hw-bar:nth-child(3){height:40px;animation-delay:.2s;}
+.hw-bar:nth-child(4){height:52px;animation-delay:.3s;}
+.hw-bar:nth-child(5){height:64px;animation-delay:.4s;}
+.hw-bar:nth-child(6){height:52px;animation-delay:.5s;}
+.hw-bar:nth-child(7){height:40px;animation-delay:.6s;}
+.hw-bar:nth-child(8){height:28px;animation-delay:.7s;}
+.hw-bar:nth-child(9){height:16px;animation-delay:.8s;}
+@keyframes hwb{0%,100%{transform:scaleY(.5);}50%{transform:scaleY(1);}}
+
+/* HOW IT WORKS */
+.section{padding:6rem 1.5rem;max-width:1100px;margin:0 auto;}
+.section-label{font-family:var(--mn);font-size:.65rem;color:var(--g);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem;}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem;}
+.section-sub{font-family:var(--mn);font-size:.8rem;color:var(--t2);line-height:1.9;max-width:500px;}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3.5rem;}
+.step-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
+  padding:1.75rem 1.5rem;position:relative;
+}
+.step-num{
+  font-family:var(--mn);font-size:3rem;font-weight:800;
+  color:var(--g);opacity:.15;line-height:1;margin-bottom:1rem;
+}
+.step-icon{width:36px;height:36px;color:var(--g);margin-bottom:1rem;}
+.step-title{font-size:1rem;font-weight:700;margin-bottom:.5rem;}
+.step-desc{font-family:var(--mn);font-size:.68rem;color:var(--t2);line-height:1.8;}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:3.5rem;}
+.feat-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
+  padding:1.5rem;display:flex;flex-direction:column;gap:.75rem;
+}
+.feat-icon{width:32px;height:32px;color:var(--g);}
+.feat-title{font-size:.9rem;font-weight:700;}
+.feat-desc{font-family:var(--mn);font-size:.67rem;color:var(--t2);line-height:1.8;}
+
+/* PRESETS SHOWCASE */
+.presets-showcase{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:.65rem;margin-top:3rem;
+}
+.ps-pill{
+  background:var(--s1);border:1px solid var(--bd);border-radius:50px;
+  padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;
+  font-size:.78rem;font-weight:600;
+}
+.ps-pill-dot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0;}
+
+/* FEEDBACK */
+.feedback-section{
+  padding:6rem 1.5rem;
+  max-width:620px;margin:0 auto;text-align:center;
+}
+.feedback-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);
+  padding:2.5rem 2rem;margin-top:2rem;text-align:left;
+}
+.feedback-card h3{font-size:1rem;font-weight:700;margin-bottom:.4rem;}
+.feedback-card p{font-family:var(--mn);font-size:.68rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.8;}
+.feedback-form{display:flex;flex-direction:column;gap:.85rem;}
+.form-group{display:flex;flex-direction:column;gap:.4rem;}
+.form-label{font-family:var(--mn);font-size:.62rem;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;}
+.form-input,.form-textarea{
+  background:var(--s2);border:1px solid var(--bd2);border-radius:var(--r2);
+  padding:.75rem 1rem;color:var(--tx);font-family:var(--mn);font-size:.78rem;
+  outline:none;transition:border-color .15s;width:100%;
+}
+.form-input:focus,.form-textarea:focus{border-color:var(--g);}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--t3);}
+.form-textarea{min-height:110px;resize:vertical;}
+.btn-submit{
+  background:var(--g);color:#000;border:none;
+  font-family:var(--fn);font-size:.88rem;font-weight:700;
+  padding:.85rem 1.5rem;border-radius:var(--r2);cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;gap:.5rem;
+  justify-content:center;
+}
+.btn-submit:hover{background:var(--g2);}
+.feedback-thanks{display:none;text-align:center;padding:2rem;font-family:var(--mn);font-size:.78rem;color:var(--g);}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--bd);
+  padding:2.5rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-left{display:flex;align-items:center;gap:.6rem;}
+.footer-logo-text{font-size:.88rem;font-weight:800;}.footer-logo-text span{color:var(--g);}
+.footer-by{font-family:var(--mn);font-size:.62rem;color:var(--t3);margin-top:.2rem;}
+.footer-right{font-family:var(--mn);font-size:.62rem;color:var(--t3);}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  nav{padding:.75rem 1.25rem;}
+  .nav-links{display:none;}
+  .steps{grid-template-columns:1fr;}
+  .section{padding:4rem 1.25rem;}
+  .feedback-section{padding:4rem 1.25rem;}
+  footer{padding:2rem 1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg class="nav-logo-svg" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="6" fill="#111"/>
+      <rect x="4" y="16" width="2.5" height="8" rx="1.25" fill="#22c55e" opacity=".4"/>
+      <rect x="8" y="11" width="2.5" height="13" rx="1.25" fill="#22c55e" opacity=".6"/>
+      <rect x="12" y="7" width="2.5" height="17" rx="1.25" fill="#22c55e"/>
+      <rect x="16" y="10" width="2.5" height="14" rx="1.25" fill="#22c55e" opacity=".6"/>
+      <rect x="20" y="15" width="2.5" height="9" rx="1.25" fill="#22c55e" opacity=".4"/>
+    </svg>
+    <div class="nav-logo-text">Audio<span>lite</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#feedback" class="nav-link">Feedback</a>
+    <a href="install.html" class="nav-link">Install</a>
+  </div>
+  <a href="app.html" class="nav-cta">Open App</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="badge-dot"></span>Free &middot; Private &middot; No uploads</div>
+  <h1 class="hero-title">
+    Extract <span class="green">studio audio</span><br/>
+    from <span class="dim">any video.</span>
+  </h1>
+  <p class="hero-sub">
+    Drop your video. Pick a sound preset.<br/>
+    Download crystal-clear audio in seconds.<br/>
+    Everything runs on your device &mdash; nothing leaves your phone.
+  </p>
+  <div class="hero-actions">
+    <a href="app.html" class="btn-hero">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      Start Extracting
+    </a>
+    <a href="install.html" class="btn-ghost">Install App</a>
+  </div>
+  <div class="hero-wave">
+    <div class="hw-bar"></div><div class="hw-bar"></div><div class="hw-bar"></div>
+    <div class="hw-bar"></div><div class="hw-bar"></div><div class="hw-bar"></div>
+    <div class="hw-bar"></div><div class="hw-bar"></div><div class="hw-bar"></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-label">How it works</div>
+  <div class="section-title">Three steps.<br/>That's it.</div>
+  <p class="section-sub">No accounts. No waiting. No file size limits from our side.</p>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      <div class="step-title">Upload your video or audio</div>
+      <div class="step-desc">MP4, MOV, AVI, WebM, MP3, WAV &mdash; drop anything. Your file never leaves your device.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <div class="step-title">Pick your sound preset</div>
+      <div class="step-desc">Podcast, Music, Interview, Social Media &mdash; each preset is tuned by sound engineers for that exact use case.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <div class="step-title">Preview and download</div>
+      <div class="step-desc">Listen to the enhanced audio, go back if needed, then export your file whenever you're ready.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features" style="padding-top:0;">
+  <div class="section-label">Features</div>
+  <div class="section-title">Built for<br/>creators.</div>
+  <div class="features">
+    <div class="feat-card">
+      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <div class="feat-title">100% Private</div>
+      <div class="feat-desc">Your files never touch a server. All processing happens right on your device using Web Audio API.</div>
+    </div>
+    <div class="feat-card">
+      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div class="feat-title">Instant Processing</div>
+      <div class="feat-desc">No queue, no wait. Audio extracts and enhances in seconds regardless of file size.</div>
+    </div>
+    <div class="feat-card">
+      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+      <div class="feat-title">Smart Noise Reduction</div>
+      <div class="feat-desc">Podcast and Speech presets include intelligent noise filtering to strip background hiss and hum.</div>
+    </div>
+    <div class="feat-card">
+      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <div class="feat-title">Live Preview</div>
+      <div class="feat-desc">Play your enhanced audio before downloading. Go back and try a different preset anytime.</div>
+    </div>
+    <div class="feat-card">
+      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <div class="feat-title">Auto-Save Projects</div>
+      <div class="feat-desc">Every project is saved automatically to your device. Pick up right where you left off.</div>
+    </div>
+    <div class="feat-card">
+      <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      <div class="feat-title">Installable PWA</div>
+      <div class="feat-desc">Add to your home screen on any device. Works offline. No app store needed.</div>
+    </div>
+  </div>
+
+  <!-- Presets -->
+  <div style="margin-top:4rem;">
+    <div class="section-label">Presets included</div>
+    <div class="presets-showcase">
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Podcast</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Interview</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Social Media</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Music</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Outdoor / Field</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Speech</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Cinema</div>
+      <div class="ps-pill"><span class="ps-pill-dot"></span>Event / Party</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEEDBACK -->
+<section class="feedback-section" id="feedback">
+  <div class="section-label" style="text-align:center;">Community</div>
+  <div class="section-title" style="text-align:center;">Tell us what<br/>you think.</div>
+  <div class="feedback-card">
+    <h3>Share your experience</h3>
+    <p>We're building Audiolite for creators like you. Your feedback shapes what comes next. Drop us a note &mdash; good or bad.</p>
+    <div class="feedback-form" id="feedback-form">
+      <div class="form-group">
+        <label class="form-label">Your Email</label>
+        <input type="email" class="form-input" id="fb-email" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Experience</label>
+        <textarea class="form-textarea" id="fb-msg" placeholder="What did you use Audiolite for? What worked, what didn't? Any features you'd love to see?"></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitFeedback()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send Feedback
+      </button>
+    </div>
+    <div class="feedback-thanks" id="feedback-thanks">
+      ✓ Thanks for your feedback! We read every message.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="6" fill="#111"/>
+      <rect x="4" y="16" width="2.5" height="8" rx="1.25" fill="#22c55e" opacity=".4"/>
+      <rect x="8" y="11" width="2.5" height="13" rx="1.25" fill="#22c55e" opacity=".6"/>
+      <rect x="12" y="7" width="2.5" height="17" rx="1.25" fill="#22c55e"/>
+      <rect x="16" y="10" width="2.5" height="14" rx="1.25" fill="#22c55e" opacity=".6"/>
+      <rect x="20" y="15" width="2.5" height="9" rx="1.25" fill="#22c55e" opacity=".4"/>
+    </svg>
+    <div>
+      <div class="footer-logo-text">Audio<span>lite</span></div>
+      <div class="footer-by">by EML Tech Studio</div>
+    </div>
+  </div>
+  <div class="footer-right">&copy; 2025 EML Tech Studio &middot; emltechstudio@gmail.com</div>
+</footer>
+
+<script>
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+function submitFeedback(){
+  const email = document.getElementById('fb-email').value.trim();
+  const msg = document.getElementById('fb-msg').value.trim();
+  if(!email || !msg){ alert('Please fill in both fields.'); return; }
+  const subject = encodeURIComponent('Audiolite Feedback');
+  const body = encodeURIComponent('From: ' + email + '\n\n' + msg);
+  window.location.href = 'mailto:emltechstudio@gmail.com?subject=' + subject + '&body=' + body;
+  document.getElementById('feedback-form').style.display = 'none';
+  document.getElementById('feedback-thanks').style.display = 'block';
+}
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const el = document.querySelector(a.getAttribute('href'));
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

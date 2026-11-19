@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#82109f">
+  <meta name="description" content="Explore practical digital tools from EML Tech Studio: research, audio, calculation, QR codes, documents, and self-study.">
+  <link rel="canonical" href="https://apps.emltechstudio.space/">
+  <meta property="og:title" content="EML App Suite | Practical Digital Tools">
+  <meta property="og:description" content="Six useful EML Tech Studio apps, each available from its own folder on this domain.">
+  <meta property="og:url" content="https://apps.emltechstudio.space/">
+  <title>EML App Suite | Practical Digital Tools</title>
+  <style>
+    :root { color-scheme: light; --purple:#82109f; --purple-2:#a838c7; --cyan:#00bfc7; --ink:#21172a; --muted:#655c6d; --paper:#faf7fc; --card:#fff; --line:#e9e1ed; --shadow:0 16px 42px rgba(50,20,62,.08); --radius:22px; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); line-height:1.55; }
+    a { color:inherit; }
+    .site-nav { position:sticky; top:0; z-index:5; background:rgba(255,255,255,.94); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+    .nav-inner { max-width:1180px; min-height:68px; padding:10px 24px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { display:inline-flex; align-items:center; gap:12px; text-decoration:none; font-weight:750; color:var(--purple); }
+    .brand img { display:block; width:142px; height:auto; }
+    .nav-links { display:flex; align-items:center; gap:22px; }
+    .nav-links a { color:var(--muted); font-size:.92rem; font-weight:650; text-decoration:none; }
+    .nav-links a:hover,.nav-links a[aria-current="page"] { color:var(--purple); }
+    .hero { position:relative; isolation:isolate; overflow:hidden; padding:78px 24px 74px; text-align:center; background:radial-gradient(ellipse at 12% 15%,rgba(130,16,159,.11),transparent 44%),radial-gradient(ellipse at 85% 75%,rgba(0,191,199,.1),transparent 43%),linear-gradient(180deg,#fff 0%,#faf7fc 100%); }
+    .hero::after { content:""; position:absolute; z-index:-1; left:50%; bottom:0; width:min(880px,82%); height:1px; transform:translateX(-50%); background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent); }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; margin:0 0 18px; padding:7px 13px; border:1px solid rgba(130,16,159,.15); border-radius:999px; background:rgba(255,255,255,.78); color:var(--purple); font-size:.76rem; font-weight:750; letter-spacing:.09em; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 4px rgba(0,191,199,.12); }
+    h1 { max-width:850px; margin:0 auto 16px; font-family:Georgia,"Times New Roman",serif; font-size:clamp(2.65rem,7vw,4.8rem); line-height:1.02; letter-spacing:-.045em; color:var(--purple); }
+    .hero-copy { max-width:700px; margin:0 auto 27px; color:var(--muted); font-size:clamp(1rem,2vw,1.18rem); }
+    .hero-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+    .button { display:inline-flex; min-height:46px; align-items:center; justify-content:center; gap:8px; padding:11px 19px; border:1px solid transparent; border-radius:999px; font-size:.93rem; font-weight:750; text-decoration:none; transition:transform .18s ease,box-shadow .18s ease,background .18s ease; }
+    .button:hover { transform:translateY(-2px); }
+    .button-primary { background:linear-gradient(135deg,var(--purple),var(--purple-2)); color:#fff; box-shadow:0 9px 20px rgba(130,16,159,.2); }
+    .button-secondary { border-color:rgba(130,16,159,.32); background:rgba(255,255,255,.78); color:var(--purple); }
+    .apps-section { max-width:1220px; margin:auto; padding:58px 24px 86px; }
+    .section-head { display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:18px; margin-bottom:27px; }
+    .section-title { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(1.8rem,4vw,2.45rem); line-height:1.12; }
+    .section-title::after { content:""; display:block; width:74px; height:4px; margin-top:13px; border-radius:4px; background:linear-gradient(90deg,var(--purple),var(--cyan)); }
+    .section-intro { max-width:570px; margin:8px 0 0; color:var(--muted); }
+    .search-wrap { position:relative; width:min(100%,300px); }
+    .search-wrap input { width:100%; min-height:44px; padding:10px 14px 10px 40px; border:1px solid var(--line); border-radius:13px; outline:none; background:white; color:var(--ink); font:inherit; }
+    .search-wrap input:focus { border-color:var(--purple-2); box-shadow:0 0 0 3px rgba(130,16,159,.1); }
+    .search-wrap span { position:absolute; top:10px; left:14px; color:var(--muted); font-size:1.1rem; }
+    .results-count { min-height:1.4em; margin:0 0 17px; color:var(--muted); font-size:.84rem; }
+    .app-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:19px; }
+    .app-card { display:flex; min-height:340px; flex-direction:column; padding:24px; border:1px solid var(--line); border-radius:var(--radius); background:var(--card); box-shadow:0 4px 16px rgba(50,20,62,.035); transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease; }
+    .app-card:hover { transform:translateY(-5px); border-color:rgba(130,16,159,.28); box-shadow:var(--shadow); }
+    .app-card[hidden] { display:none; }
+    .card-top { display:flex; align-items:center; gap:15px; margin-bottom:17px; }
+    .app-icon { display:grid; width:64px; height:64px; flex:0 0 64px; place-items:center; padding:8px; border:1px solid rgba(130,16,159,.09); border-radius:18px; background:linear-gradient(145deg,rgba(130,16,159,.07),rgba(0,191,199,.08)); }
+    .app-icon img { display:block; max-width:100%; max-height:100%; object-fit:contain; }
+    .card-name { margin:0; font-size:1.21rem; line-height:1.2; }
+    .card-kicker { margin:5px 0 0; color:var(--purple); font-size:.72rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+    .card-description { margin:0 0 18px; color:var(--muted); font-size:.94rem; }
+    .tags { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 20px; padding:0; list-style:none; }
+    .tags li { padding:5px 9px; border-radius:999px; background:#f5eef8; color:#65227b; font-size:.71rem; font-weight:650; }
+    .card-actions { display:flex; gap:9px; margin-top:auto; padding-top:16px; border-top:1px solid #f0ebf2; }
+    .card-actions .button { min-height:41px; flex:1; padding:9px 10px; font-size:.83rem; }
+    .card-actions .button-secondary { background:white; }
+    .empty-state { display:none; padding:28px; border:1px dashed #cdb8d5; border-radius:18px; color:var(--muted); text-align:center; }
+    .empty-state.visible { display:block; }
+    .route-note { margin:22px 0 0; padding:13px 16px; border-left:3px solid var(--cyan); border-radius:0 12px 12px 0; background:rgba(255,255,255,.7); color:var(--muted); font-size:.88rem; }
+    footer { padding:34px 24px; border-top:1px solid var(--line); background:white; color:var(--muted); text-align:center; }
+    footer strong { color:var(--purple); }
+    .footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:18px; margin-top:13px; }
+    .footer-links a { color:var(--muted); font-size:.9rem; text-decoration:none; }
+    .footer-links a:hover { color:var(--purple); }
+    @media (max-width:900px) { .app-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:620px) { .nav-inner{min-height:59px;padding-inline:16px}.brand img{width:122px}.nav-links{gap:13px}.nav-links a{font-size:.82rem}.hero{padding:61px 19px 56px}.apps-section{padding:43px 16px 63px}.section-head{align-items:stretch}.search-wrap{width:100%}.app-grid{grid-template-columns:1fr}.app-card{min-height:0;padding:21px} }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important} }
+  </style>
+</head>
+<body>
+  <nav class="site-nav" aria-label="Main navigation"><div class="nav-inner">
+    <a class="brand" href="https://emltechstudio.space/" aria-label="EML Tech Studio home"><img src="assets/ETSlogo.png" alt="EML Tech Studio"></a>
+    <div class="nav-links"><a href="https://emltechstudio.space/">Studio</a><a href="#apps" aria-current="page">App Suite</a></div>
+  </div></nav>
+  <header class="hero">
+    <p class="eyebrow">Useful tools, thoughtfully made</p>
+    <h1>One suite.<br>Tools for everyday work.</h1>
+    <p class="hero-copy">Explore EML Tech Studio apps for research, audio, calculation, QR codes, documents, and guided learning. Each app has its own folder and address on this domain.</p>
+    <div class="hero-actions"><a class="button button-primary" href="#apps">Explore the apps <span aria-hidden="true">↓</span></a><a class="button button-secondary" href="https://emltechstudio.space/">Visit EML Tech Studio</a></div>
+  </header>
+  <main><section class="apps-section" id="apps" aria-labelledby="apps-title">
+    <div class="section-head"><div><h2 class="section-title" id="apps-title">Our applications</h2><p class="section-intro">Six practical apps, each focused on a specific task. Open an app or go straight to its install page.</p></div>
+      <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="app-search" type="search" placeholder="Find an app…" aria-label="Search apps"></label></div>
+    <p class="results-count" id="results-count" aria-live="polite">Showing 6 apps</p>
+    <div class="app-grid" id="app-grid">
+      <article class="app-card" data-search="search sem research discovery wikipedia voice search trending gallery offline"><div class="card-top"><div class="app-icon"><img src="assets/icons/searchwithsem.svg" alt="" loading="lazy"></div><div><h3 class="card-name">Search with SEM</h3><p class="card-kicker">Smart research &amp; discovery</p></div></div><p class="card-description">Find information with quick summaries, trending topics, voice search, and an easy-to-browse gallery.</p><ul class="tags"><li>Voice search</li><li>Trending</li><li>Offline-ready</li></ul><div class="card-actions"><a class="button button-primary" href="./searchwithsem/">Open app <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="./searchwithsem/install.html">Install</a></div></article>
+      <article class="app-card" data-search="audiolite audio extraction video studio local processing private presets"><div class="card-top"><div class="app-icon"><img src="assets/icons/audiolite.svg" alt="" loading="lazy"></div><div><h3 class="card-name">Audiolite</h3><p class="card-kicker">Studio audio extraction</p></div></div><p class="card-description">Extract audio from video with local, on-device processing designed to keep your files private.</p><ul class="tags"><li>Local processing</li><li>Presets</li><li>No upload</li></ul><div class="card-actions"><a class="button button-primary" href="./audiolite/">Open app <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="./audiolite/install.html">Install</a></div></article>
+      <article class="app-card" data-search="calcpro calculator caculator scientific formulas variables history dark mode"><div class="card-top"><div class="app-icon"><img src="assets/icons/calcpro.svg" alt="" loading="lazy"></div><div><h3 class="card-name">CalcPro</h3><p class="card-kicker">Precision calculator</p></div></div><p class="card-description">A focused scientific calculator with formulas, variables, calculation history, and offline support.</p><ul class="tags"><li>Scientific</li><li>Formulas</li><li>History</li></ul><div class="card-actions"><a class="button button-primary" href="./calcpro/">Open app <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="./calcpro/install.html">Install</a></div></article>
+      <article class="app-card" data-search="codeqr qr code generate scan decode wifi contact branding"><div class="card-top"><div class="app-icon"><img src="assets/icons/codeqr.svg" alt="" loading="lazy"></div><div><h3 class="card-name">CodeQR</h3><p class="card-kicker">QR code hub</p></div></div><p class="card-description">Create, scan, and decode QR codes for links, Wi-Fi, contacts, and more—with options for custom branding.</p><ul class="tags"><li>Scan &amp; generate</li><li>Wi-Fi sharing</li><li>Branding</li></ul><div class="card-actions"><a class="button button-primary" href="./codeqr/">Open app <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="./codeqr/install.html">Install</a></div></article>
+      <article class="app-card" data-search="quotes invoices receipts quotations documents handwritten notes ai pdf export"><div class="card-top"><div class="app-icon"><img src="assets/icons/quotes.svg" alt="" loading="lazy"></div><div><h3 class="card-name">Quotes</h3><p class="card-kicker">Documents &amp; invoices</p></div></div><p class="card-description">Prepare polished quotations, receipts, and invoices, with templates and PDF export.</p><ul class="tags"><li>Templates</li><li>PDF export</li><li>Document tools</li></ul><div class="card-actions"><a class="button button-primary" href="./quotes/">Open app <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="./quotes/install.html">Install</a></div></article>
+      <article class="app-card" data-search="eml youniversity university self study courses weekly practice quizzes learner dashboard"><div class="card-top"><div class="app-icon"><img src="assets/icons/youniversity.svg" alt="" loading="lazy"></div><div><h3 class="card-name">EML Youniversity</h3><p class="card-kicker">Practical self-study</p></div></div><p class="card-description">Learn with guided courses, weekly practice, quizzes, saved progress, and a learner dashboard.</p><ul class="tags"><li>Courses</li><li>Quizzes</li><li>Saved progress</li></ul><div class="card-actions"><a class="button button-primary" href="./youniversity/">Open app <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="./youniversity/">Install</a></div></article>
+    </div>
+    <p class="empty-state" id="empty-state">No apps match that search. Try another name or feature.</p>
+    <p class="route-note">Each app is at the domain root under its own name—for example, <strong>apps.emltechstudio.space/audiolite/</strong>. No extra <code>/apps/</code> segment is used.</p>
+  </section></main>
+  <footer><p>Made with care by <strong>EML Tech Studio</strong></p><div class="footer-links"><a href="https://emltechstudio.space/">Studio website</a><a href="mailto:mail@emltechstudio.space">Contact</a></div></footer>
+  <script>
+    const search=document.getElementById('app-search');const cards=[...document.querySelectorAll('.app-card')];const count=document.getElementById('results-count');const empty=document.getElementById('empty-state');
+    search.addEventListener('input',()=>{const term=search.value.trim().toLowerCase();let visible=0;cards.forEach(card=>{const match=!term||`${card.dataset.search} ${card.textContent}`.toLowerCase().includes(term);card.hidden=!match;if(match)visible++;});count.textContent=`Showing ${visible} app${visible===1?'':'s'}`;empty.classList.toggle('visible',visible===0);});
+  </script>
+</body>
+</html>

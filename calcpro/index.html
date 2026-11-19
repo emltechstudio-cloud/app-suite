@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcPro — Advanced Calculator & Formula Solver</title>
+<meta name="description" content="Standard, scientific calculator and formula solver for students. Physics, Maths, Geometry, Chemistry. Free PWA.">
+<meta name="theme-color" content="#f97316">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--orange:#f97316;--yellow:#eab308;--bg:#fff;--surface:#f9fafb;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--shadow:0 1px 6px rgba(0,0,0,.08);--shadow-lg:0 4px 20px rgba(0,0,0,.12);--radius:14px}
+[data-theme="dark"]{--bg:#0f0f0f;--surface:#1a1a1a;--border:#2a2a2a;--text:#f3f4f6;--muted:#9ca3af}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
+
+nav{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);padding:0 22px;height:60px;display:flex;align-items:center;justify-content:space-between;transition:background .3s,border-color .3s}
+.nav-logo{display:flex;align-items:center;gap:8px;user-select:none}
+.nav-logo-icon{width:28px;height:28px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:white}
+.nav-logo-text{font-size:17px;font-weight:800;color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:4px}
+.nav-link{color:var(--muted);font-size:14px;padding:7px 12px;border-radius:8px;transition:color .2s,background .2s;white-space:nowrap}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.theme-toggle{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s}
+.theme-toggle:hover{color:var(--text);border-color:var(--orange)}
+.nav-open{background:var(--orange)!important;color:#fff!important;font-weight:600;border-radius:24px!important;padding:9px 20px!important;margin-left:4px}
+.nav-open:hover{opacity:.88}
+@media(max-width:640px){.nav-link:not(.nav-open){display:none}}
+
+.hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:72px 24px 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:600px;height:400px;background:radial-gradient(circle,rgba(249,115,22,.07) 0%,transparent 70%);top:-60px;left:50%;transform:translateX(-50%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--muted);margin-bottom:22px;letter-spacing:.04em}
+.hero-icon{width:80px;height:80px;background:var(--orange);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:38px;color:white;margin:0 auto 16px;box-shadow:0 8px 32px rgba(249,115,22,.3)}
+.hero-title{font-size:clamp(36px,8vw,72px);font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:8px;color:var(--text)}
+.hero-title span{color:var(--orange)}
+.hero-sub{font-size:18px;color:var(--muted);font-weight:300;margin-bottom:16px}
+.hero-desc{font-size:16px;color:var(--muted);max-width:440px;margin-bottom:36px;line-height:1.75}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
+.btn-primary{background:var(--orange);color:#fff;padding:14px 32px;border-radius:30px;font-size:16px;font-weight:700;display:inline-flex;align-items:center;gap:9px;transition:opacity .2s,transform .2s;box-shadow:0 4px 18px rgba(249,115,22,.3)}
+.btn-primary:hover{opacity:.88;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--text);padding:14px 32px;border-radius:30px;font-size:16px;font-weight:500;border:1px solid var(--border);display:inline-flex;align-items:center;gap:9px;transition:border-color .2s,transform .2s,background .2s}
+.btn-outline:hover{border-color:var(--orange);background:var(--surface);transform:translateY(-2px)}
+.hero-proof{display:flex;gap:20px;color:var(--muted);font-size:13px;flex-wrap:wrap;justify-content:center}
+.hero-proof span{display:flex;align-items:center;gap:5px}
+.hero-proof i{color:var(--orange)}
+
+section{padding:80px 24px}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);margin-bottom:12px}
+.section-title{font-size:clamp(24px,4vw,38px);font-weight:700;line-height:1.22;margin-bottom:12px}
+.section-sub{color:var(--muted);font-size:16px;max-width:480px;line-height:1.7}
+.section-center{text-align:center;max-width:860px;margin:0 auto}
+
+#modes{background:var(--surface);transition:background .3s}
+.modes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:44px auto 0;max-width:800px}
+.mode-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:left;transition:transform .2s,box-shadow .2s}
+.mode-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.mode-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.mode-card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.mode-card p{font-size:13px;color:var(--muted);line-height:1.6}
+
+#formulas{background:var(--bg);transition:background .3s}
+.formula-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:44px auto 0;max-width:800px}
+.formula-cat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:transform .2s,border-color .2s}
+.formula-cat:hover{transform:translateY(-3px);border-color:var(--orange)}
+.formula-cat i{font-size:28px;margin-bottom:10px;display:block}
+.formula-cat h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.formula-cat p{font-size:12px;color:var(--muted)}
+
+#feedback{background:var(--surface);transition:background .3s}
+.feedback-wrap{max-width:520px;margin:44px auto 0;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:30px;box-shadow:var(--shadow)}
+.feedback-wrap h3{font-size:16px;font-weight:700;margin-bottom:18px}
+.star-row{display:flex;gap:6px;margin-bottom:14px}
+.star{font-size:28px;cursor:pointer;color:var(--border);transition:color .15s,transform .15s;user-select:none;line-height:1}
+.star.lit,.star:hover{color:var(--yellow);transform:scale(1.15)}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.field input,.field textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text);outline:none;font-family:inherit;resize:vertical;transition:border-color .2s,background .3s}
+.field input:focus,.field textarea:focus{border-color:var(--orange)}
+.field textarea{min-height:96px}
+.send-btn{width:100%;padding:12px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .2s}
+.send-btn:hover{opacity:.88}
+
+footer{background:var(--bg);border-top:1px solid var(--border);padding:26px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;transition:background .3s,border-color .3s}
+.footer-logo{display:flex;align-items:center;gap:7px;user-select:none}
+.footer-logo-icon{width:24px;height:24px;background:var(--orange);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:white}
+.footer-logo-text{font-size:15px;font-weight:800;color:var(--text)}
+.footer-right{font-size:12px;color:var(--muted);text-align:right}
+.footer-right a{color:var(--orange);text-decoration:underline;text-underline-offset:2px}
+@media(max-width:480px){.hero{padding:52px 20px 44px}.feedback-wrap{padding:22px 16px}footer{flex-direction:column;text-align:center}.footer-right{text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon"><i class="fas fa-calculator"></i></div>
+    <span class="nav-logo-text">CalcPro</span>
+  </div>
+  <div class="nav-right">
+    <a href="#modes" class="nav-link">Modes</a>
+    <a href="#formulas" class="nav-link">Formulas</a>
+    <a href="#feedback" class="nav-link">Feedback</a>
+    <a href="install.html" class="nav-link">Install</a>
+    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <a href="app.html" class="nav-link nav-open">Open App</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><i class="fas fa-star" style="color:var(--yellow)"></i> Free · Works offline · No ads</div>
+  <div class="hero-icon"><i class="fas fa-calculator"></i></div>
+  <h1 class="hero-title">Calc<span>Pro</span></h1>
+  <p class="hero-sub">The calculator that actually teaches you</p>
+  <p class="hero-desc">Standard, scientific, and a formula solver that shows you the working — not just the answer. Built for students.</p>
+  <div class="hero-actions">
+    <a href="app.html" class="btn-primary"><i class="fas fa-calculator"></i> Open Calculator</a>
+    <a href="install.html" class="btn-outline"><i class="fas fa-download"></i> Install App</a>
+  </div>
+  <div class="hero-proof">
+    <span><i class="fas fa-check-circle"></i> Works offline</span>
+    <span><i class="fas fa-check-circle"></i> No account</span>
+    <span><i class="fas fa-check-circle"></i> No ads</span>
+    <span><i class="fas fa-check-circle"></i> Always free</span>
+  </div>
+</section>
+
+<section id="modes">
+  <div class="section-center">
+    <div class="section-label">3 Modes</div>
+    <h2 class="section-title">One app. Everything you need.</h2>
+    <p class="section-sub">Switch between modes with one tap. Each one designed to be fast and distraction-free.</p>
+    <div class="modes-grid">
+      <div class="mode-card">
+        <div class="mode-icon" style="background:rgba(249,115,22,.1);color:var(--orange)"><i class="fas fa-calculator"></i></div>
+        <h3>Standard</h3>
+        <p>Clean everyday calculator with history. Add, subtract, multiply, divide, percentages — all at your fingertips.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-icon" style="background:rgba(234,179,8,.1);color:var(--yellow)"><i class="fas fa-superscript"></i></div>
+        <h3>Scientific</h3>
+        <p>Trigonometry, logarithms, powers, roots, factorial, constants (π, e), inverse functions, degree/radian toggle.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-icon" style="background:rgba(34,197,94,.1);color:#16a34a"><i class="fas fa-book-open"></i></div>
+        <h3>Formula Solver</h3>
+        <p>Pick a formula, enter what you know, and it solves for the unknown — showing the full working step by step.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="formulas">
+  <div class="section-center">
+    <div class="section-label">Formula Library</div>
+    <h2 class="section-title">Built for students.</h2>
+    <p class="section-sub">Covers the most common formulas across your core subjects. More added regularly.</p>
+    <div class="formula-cats">
+      <div class="formula-cat">
+        <i class="fas fa-atom" style="color:var(--orange)"></i>
+        <h3>Physics</h3>
+        <p>Newton's laws, kinematics, energy, Ohm's law, power</p>
+      </div>
+      <div class="formula-cat">
+        <i class="fas fa-square-root-alt" style="color:var(--yellow)"></i>
+        <h3>Maths</h3>
+        <p>Quadratic formula, Pythagoras, simple interest, speed/distance/time</p>
+      </div>
+      <div class="formula-cat">
+        <i class="fas fa-shapes" style="color:#3b82f6"></i>
+        <h3>Geometry</h3>
+        <p>Circle, rectangle, triangle, sphere — area, perimeter, volume</p>
+      </div>
+      <div class="formula-cat">
+        <i class="fas fa-flask" style="color:#16a34a"></i>
+        <h3>Chemistry</h3>
+        <p>Moles, ideal gas law, concentration, molar mass</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="feedback">
+  <div class="section-center">
+    <div class="section-label">Feedback</div>
+    <h2 class="section-title">Tell us what to add next.</h2>
+    <p class="section-sub">Missing a formula? Found a bug? We read everything.</p>
+    <div class="feedback-wrap">
+      <h3>Share your thoughts</h3>
+      <div class="star-row" id="starRow">
+        <span class="star" data-v="1">★</span>
+        <span class="star" data-v="2">★</span>
+        <span class="star" data-v="3">★</span>
+        <span class="star" data-v="4">★</span>
+        <span class="star" data-v="5">★</span>
+      </div>
+      <div class="field"><label>Your Name <span style="font-weight:400;text-transform:none">(optional)</span></label><input type="text" id="fbName" placeholder="e.g. Chukwuemeka"></div>
+      <div class="field"><label>Your Feedback</label><textarea id="fbMessage" placeholder="What formula should we add? What's broken? What do you love?"></textarea></div>
+      <button class="send-btn" id="sendBtn"><i class="fas fa-envelope"></i> Send Feedback</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">
+    <div class="footer-logo-icon"><i class="fas fa-calculator"></i></div>
+    <span class="footer-logo-text">CalcPro</span>
+  </div>
+  <div class="footer-right">
+    by <a href="https://emltechstudio.space" target="_blank" rel="noopener">EML Tech Studio</a><br>
+    &copy; 2026 EML Tech Studio &middot; emltechstudio@gmail.com
+  </div>
+</footer>
+
+<script>
+const tt = document.getElementById('themeToggle');
+const ti = document.getElementById('themeIcon');
+function applyTheme(dark){dark?document.body.setAttribute('data-theme','dark'):document.body.removeAttribute('data-theme');ti.className=dark?'fas fa-sun':'fas fa-moon';localStorage.setItem('cp-site-theme',dark?'dark':'light')}
+const saved=localStorage.getItem('cp-site-theme');
+applyTheme(saved?saved==='dark':window.matchMedia('(prefers-color-scheme:dark)').matches);
+tt.addEventListener('click',()=>applyTheme(document.body.getAttribute('data-theme')!=='dark'));
+
+let rating=0;
+document.querySelectorAll('.star').forEach(s=>{
+  s.addEventListener('mouseover',()=>document.querySelectorAll('.star').forEach(st=>st.classList.toggle('lit',+st.dataset.v<=+s.dataset.v)));
+  s.addEventListener('mouseout',()=>document.querySelectorAll('.star').forEach(st=>st.classList.toggle('lit',+st.dataset.v<=rating)));
+  s.addEventListener('click',()=>{rating=+s.dataset.v;document.querySelectorAll('.star').forEach(st=>st.classList.toggle('lit',+st.dataset.v<=rating))});
+});
+
+document.getElementById('sendBtn').addEventListener('click',()=>{
+  const msg=document.getElementById('fbMessage').value.trim();
+  const name=document.getElementById('fbName').value.trim();
+  if(!msg){document.getElementById('fbMessage').style.borderColor='#ef4444';setTimeout(()=>document.getElementById('fbMessage').style.borderColor='',1800);return}
+  const stars=rating>0?'★'.repeat(rating)+'☆'.repeat(5-rating)+` (${rating}/5)`:'No rating';
+  const subject=encodeURIComponent('CalcPro — Feedback');
+  const body=encodeURIComponent(`Rating: ${stars}\nFrom: ${name||'Anonymous'}\n\nFeedback:\n${msg}\n\n---\nSent from calcpro.afric.site`);
+  window.location.href=`mailto:emltechstudio@gmail.com?subject=${subject}&body=${body}`;
+});
+</script>
+</body>
+</html>

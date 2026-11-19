@@ -1,0 +1,75 @@
+# Visual Verification — 21 August 2026
+
+The landing page renders the intended asymmetric EML composition: a full-height violet/cyan signal rail, a high-contrast white content workspace, an editorial hero, and a deep-indigo/cyan-accented project promise card. The existing EML logo image resolved successfully. Course catalogue data was still loading at the instant of capture, so the interface’s fallback and live API behaviour require an explicit console/network check.
+
+The learner portal also renders correctly at desktop width. The email-plus-Learner-ID entry point is immediately visible, the instruction that no email is sent is prominent, and non-accredited self-study wording is retained. The primary action has sufficient dark-indigo/white contrast. The portal’s learner dashboard, course and quiz states remain data-driven and require an authenticated API check before delivery.
+
+## Follow-up verification
+
+The landing-page dynamic catalogue was checked after the asynchronous API requests settled. It successfully rendered the current live GSWC course cards, including Scratch, HTML, CSS, JavaScript, and Python. The initial portal catalogue loader contained a parenthesis error; it was repaired and the embedded scripts in both HTML pages now pass a local syntax validation. The portal entry view renders after that repair. No live learner account was created solely for visual testing.
+
+## PWA verification
+
+The landing page now contains the public **What’s New** route and loaded the three truthful launch updates from the local release register. In the served HTTPS-compatible preview, the manifest reported `display: standalone` with `/portal.html` as the start URL. The browser registered **University Service Worker** successfully for the Youniversity preview scope. The service worker intentionally caches only the app shell and update register; authenticated learner data and protected assessment actions remain live, backend-authoritative requests.
+
+The portal’s new Menu trigger was opened successfully at desktop width. Its visible menu keeps personal learner actions in the portal while giving learners direct routes to **What’s New**, course paths, and SEM guidance. The interaction is compact and does not obscure the Learner ID sign-in instruction or the self-study notice.
+
+## Cross-discipline catalogue verification
+
+The landing-page catalogue now renders all **13** published starter pathways from the live API: five GSWC Coding courses, four GSWV Visuals courses, and four GSWAF Practical AI courses. The PWA loader now supports the published `course_order` contract and a safe temporary fallback for legacy `course_queue` records, so users do not lose Visuals or Practical AI cards during an API cache transition.
+
+## Live registration flow check
+
+The public portal was opened against the live API and its **Create my Learner ID** mode correctly removed the sign-in-only Learner ID field, leaving a single email field and an explicit registration action. The next verification step is a controlled, non-personal integration account registration followed by authenticated catalogue and learner-action checks.
+
+The controlled live registration created an account-level Learner ID and displayed it only in the browser flow, with no email-delivery step. The immediate login check then revealed the true backend blocker: the Space did not have `JWT_SECRET`, so token signing was unavailable. A new private signing secret has now been added in the Space settings; the Space entered its automatic restart sequence and must complete that restart before login, enrollment, progress, quiz, and completion checks can be repeated.
+
+## Modern campus-style learner dashboard verification
+
+The dedicated `dashboard.html` was checked with the controlled non-personal learner account after successful live sign-in. It presents a focused learner workspace rather than a full course catalogue: the signed-in account, active course, current week, credited source link, guided practical outcome, visible next action, section and quiz record, backend-controlled completion-record notice, and the entire seven-week route all appear in one clear hierarchy.
+
+The verified active state loaded **AI for Everyone** at 14% completion, identified Week 2 as the next weekly action after the saved Week 1 record, named the credited CVC / @ONE source, and made the remaining five-week route visible without distracting the learner from the current task. The desktop view retains the EML violet/cyan signal rail, while the compact layout moves the account and current course panels into a readable single-column sequence on smaller screens.
+
+The authenticated no-enrollment state was also verified. It replaces the active-course canvas with a single, clear first-course action and accurately states that all 13 published courses are available. Following that action opens the separate course catalogue, which then populated all five Coding, four Visuals, and four Practical AI course cards from the live backend.
+
+### Course-home clarification pass
+
+The revised authenticated course-home layout was verified with the live **AI for Everyone** curriculum structure and a non-persistent active-course progress fixture. The page showed Week 1 as saved, Week 2 as the current module, Weeks 3–7 as separate readable module cards, and the 40-question final assessment as a distinct locked card after the seventh week. Each weekly card exposes its direct opening action, while the course home provides separate visible destinations for Course Modules, Activities, Progress, and Course Information. The layout preserves the EML violet/cyan identity while making the complete learning sequence easier to scan than the earlier compact week tiles.
+
+The direct Week 7 module route was also checked in the live preview. Its course link opened **Complete and explain a responsible outcome** with the correct Google AI Essentials source, guided practice, independent variation, evidence artifact, and quiz action; it did not default the learner back to Week 1.
+
+The final-assessment route was checked before enrollment and showed a clear locked state instead of protected questions. It explained that enrollment, every completed weekly section, and every attempted weekly quiz are required before the backend makes the single final-assessment attempt available.
+
+An exact 390 × 844 CSS-pixel fixture capture confirmed the narrow mobile course-home hierarchy: the full course name wraps cleanly, the learner account card remains readable, course-area controls remain available as an intentionally horizontally scrollable row, and the current weekly module maintains its large, practical-task-first presentation. The EML violet/cyan identity remains visible without relying on a copied University of the People visual treatment.
+
+## Complete dashboard rebuild — supersedes the earlier course-home pass
+
+The earlier dashboard implementation was rejected after learner-flow and responsiveness issues were reported. `dashboard.html` was replaced from a clean mobile-first structure, with no horizontal course-area controls or desktop drawer required for the main learning route. The rebuilt order is account header, course identity, current lesson, all weekly lessons, final assessment, learning record, and course information.
+
+An exact Chrome DevTools 390 × 844 CSS-pixel verification of the replacement reported a **358-pixel single-column course overview**, seven rendered weekly modules, a visible completed-lesson **Review lesson** action, a direct Week 7 link, and a visible Final Assessment card. The corresponding phone capture showed the complete course name, account details, and current Week 2 content fitting in the viewport without title clipping. A live preview click on the completed Week 1 **Review lesson** action opened that exact Week 1 lesson in the learner portal, confirming that saved lessons remain reachable rather than being replaced by the current lesson.
+
+## Access-state and source-alignment correction
+
+The earlier automatic dashboard redirect was replaced with an in-page access state. A fresh browser-profile capture at 390 × 844 CSS pixels stayed on `dashboard.html`, explained that a Learner ID session is required to open private course records, and presented only **Sign in to my learning** and **Explore courses** actions. The misleading Sign out control was then removed from this unauthenticated state.
+
+The private AI for Web & PWA Building Week 1 mapping was independently audited. Its original React-AI video assignment did not match “Define a narrow user problem.” The course now maps that lesson to the credited WisePup Product Requirements Document web-app video, and all five private Week 1 quiz traceability entries reference the same source. The course manifest and assessment JSON both parse successfully, and the seven-week curriculum audit confirms valid source references.
+
+## Clear learner dashboard and weekly-flow pass
+
+The dashboard is now a course entry screen rather than a lesson page. It provides a left learner menu, top-right initial-based learner profile control, one current course, separate Grades and All Courses destinations, and seven rectangular week cards. Opening a week leads to the dedicated portal route, where the learner moves through **notes and outcomes**, **credited video**, **quiz readiness**, and the protected weekly quiz. Completed weeks retain an explicit review action.
+
+The new `profile.html` page was checked in the live review server with the controlled learner account. It shows the masked account email, account-level Learner ID, account-created date, and private-record explanation, with a clear return to My Course. The top-right learner initial from the dashboard opened this profile page successfully.
+
+The dedicated `assessment.html` route was checked with a signed-in but non-enrolled learner. It remained on a clear locked explanation, confirmed that enrollment plus every recorded week and weekly quiz is required, and did not reveal protected final-assessment questions.
+
+An exact **390 × 844 CSS-pixel** live-course fixture was captured for the current dashboard. It measured a 390-pixel viewport and 390-pixel document scroll width, confirming no horizontal overflow. It rendered seven week cards, a Week 1 **Review week** action, the current Week 2 route, a visible phone menu control, and the final-assessment card. The first phone viewport kept the current weekly action, learner identity, and course title in one readable column.
+
+## Display-name and full learner-flow verification — 22 August 2026
+
+The private learner display-name extension was deployed to the active `youniversity/` backend module paths and verified locally against a temporary legacy-style SQLite schema, then live through controlled registration, Learner-ID login, and authenticated profile retrieval. Existing records retain a blank optional display name; new accounts require a 2–80 character name. The private learner-state snapshot contains display names with hashed identifiers, but continues to exclude raw email addresses, verification codes, selected answers, and private answer keys.
+
+A controlled non-personal named learner was registered, signed in, and enrolled in **AI for Web & PWA Building**. The course dashboard showed the display name and `C` profile initial, a drawer with **My course**, **Profile**, **Grades**, **All courses**, and **Sign out**, one course summary, seven rectangular Week 1–7 cards, and a separate final-assessment card. The dedicated Profile page refreshed the authenticated name, showed only the masked email identifier and Learner ID, and retained a clear return route.
+
+The learner journey was followed from Week 1 notes and outcomes to the credited WisePup **Product Requirements Document | How To Build A Web App ep2** source, then to the readiness step. Saving Week 1 completion succeeded for the controlled account. The protected weekly quiz returned exactly five learner-safe prompts and no correct-option, explanation, or answer-key text; no controlled quiz submission was made. Grades independently rendered seven weekly quiz rows and a separate final row. The final-assessment route remained locked and rendered no final questions after only Week 1 completion. A Week 7 deep link opened **Review, revise, and explain ownership** directly, confirming the course route did not collapse to Week 1.
+
+The updated exact **390 × 844 CSS-pixel** fixture measured a 390-pixel viewport, 390-pixel document width, seven week cards, a **Review week** action, correct Week 7 content, a visible final card, and a visible drawer trigger. The revised portal avatar also used the saved display-name initial on catalogue and weekly routes. Desktop browser captures of the notes, video, readiness, profile, grades, and final-lock screens confirmed the readable two-part campus hierarchy and preserved EML violet/cyan contrast.

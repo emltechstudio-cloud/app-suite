@@ -1,0 +1,18 @@
+{
+  "name": "Audiolite",
+  "short_name": "Audiolite",
+  "description": "Extract and enhance studio-quality audio from any video. By EML Tech Studio.",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "categories": ["productivity", "music", "utilities"],
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "New Project", "url": "./app.html", "description": "Start extracting audio" }
+  ]
+}
