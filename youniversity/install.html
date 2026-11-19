@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#49118c">
+  <meta name="description" content="Install EML Youniversity on your device for quick access to your learner portal.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="pwa-icon.svg">
+  <title>Install EML Youniversity</title>
+  <style>
+    :root{color-scheme:light;--violet:#49118c;--indigo:#16034c;--cyan:#17d9e6;--ink:#15122a;--muted:#666279;--paper:#fbfbfe;--line:#e8e5f0;font-family:"DM Sans",Arial,sans-serif}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 10% 10%,rgba(141,24,173,.12),transparent 38%),radial-gradient(ellipse at 95% 90%,rgba(23,217,230,.12),transparent 42%),var(--paper);color:var(--ink);display:grid;place-items:center;padding:24px}
+    .card{width:min(100%,620px);padding:clamp(25px,6vw,48px);border:1px solid var(--line);border-radius:26px;background:rgba(255,255,255,.94);box-shadow:0 22px 70px rgba(34,15,66,.12)}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:30px}.brand img{width:58px;height:58px;object-fit:contain}.brand small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.brand strong{font:800 13px/1.2 "Sora",Arial,sans-serif;letter-spacing:.04em;color:var(--violet)}
+    .eyebrow{color:var(--violet);font:800 11px "Sora",Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}.eyebrow:before{content:"";display:inline-block;width:20px;height:3px;margin:0 8px 3px 0;border-radius:3px;background:var(--cyan)}
+    h1{margin:13px 0 12px;font:800 clamp(32px,7vw,48px)/1.03 "Sora",Arial,sans-serif;letter-spacing:-.055em}h1 span{color:var(--violet)}.intro{margin:0;color:var(--muted);font-size:16px;line-height:1.6}
+    .actions{display:flex;flex-wrap:wrap;gap:11px;margin:26px 0 22px}.button{display:inline-flex;min-height:48px;align-items:center;justify-content:center;padding:12px 18px;border:0;border-radius:12px;background:var(--indigo);color:#fff;text-decoration:none;font:700 13px "Sora",Arial,sans-serif;cursor:pointer;box-shadow:0 10px 22px rgba(22,3,76,.16)}.button.secondary{border:1px solid #d9d1eb;background:#fff;color:var(--violet);box-shadow:none}.button[hidden]{display:none}
+    .instructions{margin-top:20px;padding:19px 20px;border:1px solid var(--line);border-radius:16px;background:#fbfaff}.instructions h2{margin:0 0 10px;font:700 16px "Sora",Arial,sans-serif}.instructions ol{margin:0;padding-left:21px;color:var(--muted);font-size:14px;line-height:1.65}.instructions[hidden]{display:none}
+    .fallback{margin-top:16px;padding:14px 16px;border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;background:#f3feff;color:#4e5661;font-size:13px;line-height:1.55}.status{min-height:1.4em;margin:14px 0 0;color:var(--violet);font-size:13px;font-weight:700}.back{display:inline-block;margin-top:22px;color:var(--violet);font-size:13px;font-weight:700;text-decoration:none}.back:hover{text-decoration:underline}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="card">
+    <div class="brand"><img src="pwa-icon.svg" alt=""><div><strong>EML YOUNIVERSITY</strong><small>Free practical self-study</small></div></div>
+    <span class="eyebrow">Install the app</span>
+    <h1>Take your learning<br>with <span>you.</span></h1>
+    <p class="intro">Add EML Youniversity to your device for quick access to the learner portal. The app opens from its own icon and keeps the existing Youniversity experience.</p>
+    <div class="actions">
+      <button class="button" id="install-button" type="button" hidden>Install EML Youniversity</button>
+      <a class="button secondary" href="portal.html">Open learner portal</a>
+    </div>
+    <section class="instructions" id="ios-instructions" hidden aria-labelledby="ios-title">
+      <h2 id="ios-title">Install on iPhone or iPad</h2>
+      <ol><li>Open this page in Safari.</li><li>Tap the Share button.</li><li>Choose <strong>Add to Home Screen</strong>, then tap <strong>Add</strong>.</li></ol>
+    </section>
+    <section class="instructions" id="browser-instructions" hidden aria-labelledby="browser-title">
+      <h2 id="browser-title">Install from your browser</h2>
+      <ol><li>Open the browser menu on this page.</li><li>Choose <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</li><li>Confirm the browser prompt.</li></ol>
+    </section>
+    <p class="fallback" id="fallback-message">If your browser supports a direct install prompt, an install button will appear here. Otherwise, use the browser menu and choose <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</p>
+    <p class="status" id="install-status" role="status" aria-live="polite"></p>
+    <a class="back" href="./">← Back to EML Youniversity</a>
+  </main>
+  <script>
+    let deferredPrompt;
+    const installButton=document.getElementById('install-button');
+    const status=document.getElementById('install-status');
+    const browserInstructions=document.getElementById('browser-instructions');
+    const iosInstructions=document.getElementById('ios-instructions');
+    const fallbackMessage=document.getElementById('fallback-message');
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+    const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    if(isIOS&&!isStandalone){iosInstructions.hidden=false;fallbackMessage.textContent='iPhone and iPad installation is completed through Safari’s Share menu, using Add to Home Screen.';}
+    if(!isIOS&&!isStandalone)browserInstructions.hidden=false;
+    if(isStandalone){fallbackMessage.hidden=true;status.textContent='EML Youniversity is already open as an installed app.';}
+    window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredPrompt=event;installButton.hidden=false;browserInstructions.hidden=true;fallbackMessage.hidden=true;});
+    installButton.addEventListener('click',async()=>{
+      if(!deferredPrompt)return;
+      const promptEvent=deferredPrompt;deferredPrompt=undefined;installButton.hidden=true;
+      await promptEvent.prompt();
+      const choice=await promptEvent.userChoice;
+      status.textContent=choice.outcome==='accepted'?'EML Youniversity is being added to your device.':'Installation was cancelled. You can try again from the browser menu.';
+      if(choice.outcome!=='accepted')browserInstructions.hidden=false;
+    });
+    window.addEventListener('appinstalled',()=>{installButton.hidden=true;status.textContent='EML Youniversity was installed successfully.';});
+    if('serviceWorker'in navigator)navigator.serviceWorker.register('./university-service-worker.js').catch(()=>{});
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # EML App Suite
 
-This repository combines the EML Tech Studio App Suite homepage with six apps in **separate folders at the repository root**. The root `index.html` is the homepage, so the intended addresses are `https://apps.emltechstudio.space/` for the suite and, for example, `https://apps.emltechstudio.space/audiolite/` for an app. There is no extra `/apps/` path segment.
+This repository contains the App Suite homepage and six app source folders at the repository root. The homepage lists the six bundled apps plus a MyShub card linking to its existing live app and install page. There is no extra `/apps/` directory.
 
 ## Repository layout
 
@@ -16,7 +16,7 @@ quotes/
 youniversity/
 ```
 
-| App | Root folder | Source repository / path |
+| Bundled app | Folder | Source |
 | --- | --- | --- |
 | Search with SEM | `searchwithsem/` | [searchwithsem](https://github.com/emltechstudio-cloud/searchwithsem) |
 | Audiolite | `audiolite/` | [Audiolite](https://github.com/emltechstudio-cloud/Audiolite) |
@@ -25,18 +25,23 @@ youniversity/
 | Quotes | `quotes/` | [quotes](https://github.com/emltechstudio-cloud/quotes) |
 | EML Youniversity | `youniversity/` | [`officialwebsite.com/youniversity`](https://github.com/emltechstudio-cloud/officialwebsite.com/tree/main/youniversity) |
 
-The root homepage uses static app cards, so the list does not disappear if the older dynamic catalogue feed is unavailable. The Open and Install buttons use paths inside this repository.
+## Copy and change policy
 
-## Explicit exclusions
+The six app folders were copied from their existing repositories without rewriting their app code. `youniversity/install.html` is the only new app-specific page; the copied Youniversity source did not have a dedicated install page. The suite's root homepage is a separate catalogue page; it retains the existing catalogue API lookup and analytics calls, with static app-card content if the API is unavailable.
 
-- **MyShub** (`myshub`) is excluded.
-- **My Shop** (`myshop`) is excluded and remains a separate project.
+**MyShub** remains listed in the App Suite but its source folder is not copied into this repository. The card opens the existing app at [myshub.site](https://myshub.site) and links to its existing install page at [myshub.site/install.html](https://myshub.site/install.html). Its original repository and live app are untouched.
+
+**My Shop** (`myshop`) is not included here and remains untouched as a separate project.
+
+## Youniversity and the main site
+
+The existing Youniversity app files are copied into `youniversity/`, with the new install page at `youniversity/install.html`. The original Youniversity folder on `officialwebsite.com` remains in place because the main site was not changed. This is a copy, not a move, so it does not reduce the original repository's size.
 
 ## Domain and deployment
 
-The root `CNAME` contains the requested domain `apps.emltechstudio.space`. This only records the intended domain in the repository. GitHub Pages has not been enabled, no deployment has been published, and no DNS settings have been changed. The existing main website and all original app repositories remain untouched.
+The root `CNAME` contains `apps.emltechstudio.space`. GitHub Pages has not been enabled, no deployment has been published, and DNS has not been changed. The CNAME file alone does not publish the site; Pages settings and the DNS record still need to be configured. Pages access for a private repository depends on the GitHub plan.
 
-The app directories are source snapshots from the existing repositories at the time this repository was assembled. They are now arranged at the requested root-level paths. Before making this the production host, test each app and its PWA install/service-worker behavior on the new paths; the source files were copied without broad code rewrites. MyShub is excluded, including its root-relative routing issue.
+All original app repositories and the existing main website remain untouched. The copied apps still need production testing on the new hostname before the domain is switched over.
 
 ## Local preview
 
